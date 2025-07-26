@@ -12,21 +12,24 @@
   <script>
     async function pay() {
       try {
-        const res = await fetch('https://script.google.com/macros/s/AKfycbzv-SKHN_pcSRWMUaG6MegsenTjauGsmiIQFmBXVW1j7_nIYMi0PBN3ARiP0uev3Exl/exec', {
+        const res = await fetch('https://script.google.com/macros/s/你的ID/exec', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({})
         });
-
-        const data = await res.json();
-        console.log("資料內容：", data);
+    
+        const text = await res.text(); // 用 text() 先檢查內容
+        console.log('Raw Response:', text);
+    
+        const data = JSON.parse(text);
+        console.log('Parsed JSON:', data);
+    
         if (data.info && data.info.paymentUrl && data.info.paymentUrl.web) {
           window.location.href = data.info.paymentUrl.web;
         } else {
           alert("建立失敗：" + JSON.stringify(data));
-          console.error("LINE Pay 回應：", data);
         }
       } catch (err) {
         alert("錯誤：" + err.message);
