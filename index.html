@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>LINE Pay 測試付款</title>
+</head>
+<body>
+  <h1>購買：貓咪拿鐵</h1>
+  <p>NT$100</p>
+  <button onclick="pay()">使用 LINE Pay 付款</button>
+
+  <script>
+    async function pay() {
+      const res = await fetch('https://script.google.com/macros/s/AKfycbzv-SKHN_pcSRWMUaG6MegsenTjauGsmiIQFmBXVW1j7_nIYMi0PBN3ARiP0uev3Exl/exec', {
+        method: 'POST',
+        body: JSON.stringify({}),
+      });
+      const data = await res.json();
+      if (data.info && data.info.paymentUrl) {
+        location.href = data.info.paymentUrl.web;
+      } else {
+        alert("錯誤：" + JSON.stringify(data));
+      }
+    }
+  </script>
+</body>
+</html>
