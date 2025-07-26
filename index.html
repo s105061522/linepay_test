@@ -21,6 +21,7 @@
         });
 
         const data = await res.json();
+        console.log("資料內容：", data);
         if (data.info && data.info.paymentUrl && data.info.paymentUrl.web) {
           window.location.href = data.info.paymentUrl.web;
         } else {
