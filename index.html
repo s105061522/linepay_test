@@ -11,15 +11,25 @@
 
   <script>
     async function pay() {
-      const res = await fetch('https://script.google.com/macros/s/AKfycbzv-SKHN_pcSRWMUaG6MegsenTjauGsmiIQFmBXVW1j7_nIYMi0PBN3ARiP0uev3Exl/exec', {
-        method: 'POST',
-        body: JSON.stringify({}),
-      });
-      const data = await res.json();
-      if (data.info && data.info.paymentUrl) {
-        location.href = data.info.paymentUrl.web;
-      } else {
-        alert("錯誤：" + JSON.stringify(data));
+      try {
+        const res = await fetch('https://script.google.com/macros/s/AKfycbzv-SKHN_pcSRWMUaG6MegsenTjauGsmiIQFmBXVW1j7_nIYMi0PBN3ARiP0uev3Exl/exec', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({})
+        });
+
+        const data = await res.json();
+        if (data.info && data.info.paymentUrl && data.info.paymentUrl.web) {
+          window.location.href = data.info.paymentUrl.web;
+        } else {
+          alert("建立失敗：" + JSON.stringify(data));
+          console.error("LINE Pay 回應：", data);
+        }
+      } catch (err) {
+        alert("錯誤：" + err.message);
+        console.error("錯誤內容：", err);
       }
     }
   </script>
