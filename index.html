@@ -19,15 +19,18 @@
           },
           body: JSON.stringify({})
         });
-    
-        const text = await res.text(); // 用 text() 先檢查內容
+
+        const text = await res.text();
         console.log('Raw Response:', text);
-    
+
         const data = JSON.parse(text);
         console.log('Parsed JSON:', data);
-    
+
         if (data.info && data.info.paymentUrl && data.info.paymentUrl.web) {
+          // 成功建立付款連結，導向至 LINE Pay 頁面
           window.location.href = data.info.paymentUrl.web;
+        } else if (data.returnCode === '0000') {
+          alert('已建立訂單，但缺少付款連結');
         } else {
           alert("建立失敗：" + JSON.stringify(data));
         }
