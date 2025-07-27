@@ -12,25 +12,35 @@
   <script>
     async function pay() {
       try {
-        const res = await fetch('https://script.google.com/macros/s/AKfycbzv-SKHN_pcSRWMUaG6MegsenTjauGsmiIQFmBXVW1j7_nIYMi0PBN3ARiP0uev3Exl/exec', {
+        const res = await fetch('http://38.60.212.76:3000/pay', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({})
+          body: JSON.stringify({
+            amount: 100,
+            currency: 'TWD',
+            orderId: 'cat-latte-' + Date.now(),
+            packages: [
+              {
+                id: 'package1',
+                amount: 100,
+                name: '貓咪拿鐵',
+                products: [{ name: '貓咪拿鐵', quantity: 1, price: 100 }]
+              }
+            ],
+            redirectUrls: {
+              confirmUrl: 'https://treehouse.example.com/confirm.html',
+              cancelUrl: 'https://treehouse.example.com/cancel.html'
+            }
+          })
         });
 
-        const text = await res.text();
-        console.log('Raw Response:', text);
-
-        const data = JSON.parse(text);
+        const data = await res.json();
         console.log('Parsed JSON:', data);
 
-        if (data.info && data.info.paymentUrl && data.info.paymentUrl.web) {
-          // 成功建立付款連結，導向至 LINE Pay 頁面
+        if (data.info?.paymentUrl?.web) {
           window.location.href = data.info.paymentUrl.web;
-        } else if (data.returnCode === '0000') {
-          alert('已建立訂單，但缺少付款連結');
         } else {
           alert("建立失敗：" + JSON.stringify(data));
         }
