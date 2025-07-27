@@ -19,34 +19,36 @@
           },
           body: JSON.stringify({
             amount: 100,
-            currency: 'TWD',
-            orderId: 'cat-latte-' + Date.now(),
-            packages: [
-              {
-                id: 'package1',
-                amount: 100,
-                name: '貓咪拿鐵',
-                products: [{ name: '貓咪拿鐵', quantity: 1, price: 100 }]
-              }
-            ],
+            currency: "TWD",
+            orderId: "order_" + Date.now(),
+            packages: [{
+              id: "package1",
+              amount: 100,
+              name: "樹屋咖啡",
+              products: [{
+                name: "貓咪拿鐵",
+                quantity: 1,
+                price: 100
+              }]
+            }],
             redirectUrls: {
-              confirmUrl: 'https://treehouse.example.com/confirm.html',
-              cancelUrl: 'https://treehouse.example.com/cancel.html'
+              confirmUrl: "http://38.60.212.76:3000/confirm",
+              cancelUrl: "https://treehouse.com/cancel"
             }
           })
         });
 
         const data = await res.json();
-        console.log('Parsed JSON:', data);
+        console.log("LINE Pay Response:", data);
 
-        if (data.info?.paymentUrl?.web) {
+        if (data.info && data.info.paymentUrl && data.info.paymentUrl.web) {
           window.location.href = data.info.paymentUrl.web;
         } else {
           alert("建立失敗：" + JSON.stringify(data));
         }
       } catch (err) {
         alert("錯誤：" + err.message);
-        console.error("錯誤內容：", err);
+        console.error("錯誤細節：", err);
       }
     }
   </script>
